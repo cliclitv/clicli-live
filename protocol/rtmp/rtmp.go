@@ -4,10 +4,10 @@ import (
 	"net"
 	"time"
 
-	"github.com/cliclitv/clicli-live/media/av"
-	"github.com/cliclitv/clicli-live/media/container/flv"
-	"github.com/cliclitv/clicli-live/media/protocol/rtmp/core"
-	"github.com/cliclitv/clicli-live/media/utils/uid"
+	"github.com/cliclitv/clicli-live/av"
+	"github.com/cliclitv/clicli-live/container/flv"
+	"github.com/cliclitv/clicli-live/protocol/rtmp/core"
+	"github.com/cliclitv/clicli-live/utils/uid"
 	"fmt"
 	"net/url"
 

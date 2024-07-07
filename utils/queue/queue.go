@@ -3,7 +3,7 @@ package queue
 import (
 	"sync"
 
-	"github.com/cliclitv/clicli-live/media/av"
+	"github.com/cliclitv/clicli-live/av"
 )
 
 // Queue is a basic FIFO queue for Messages.

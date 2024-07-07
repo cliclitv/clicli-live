@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"testing"
 
-	"github.com/cliclitv/clicli-live/media/utils/pool"
+	"github.com/cliclitv/clicli-live/utils/pool"
 
 	"github.com/stretchr/testify/assert"
 )

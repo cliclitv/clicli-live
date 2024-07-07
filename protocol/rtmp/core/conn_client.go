@@ -10,8 +10,8 @@ import (
 	neturl "net/url"
 	"strings"
 	
-	"github.com/cliclitv/clicli-live/media/av"
-	"github.com/cliclitv/clicli-live/media/protocol/amf"
+	"github.com/cliclitv/clicli-live/av"
+	"github.com/cliclitv/clicli-live/protocol/amf"
 )
 
 var (

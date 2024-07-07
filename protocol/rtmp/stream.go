@@ -5,9 +5,9 @@ import (
 	"time"
 	"fmt"
 
-	"github.com/cliclitv/clicli-live/media/av"
-	"github.com/cliclitv/clicli-live/media/protocol/rtmp/cache"
-	"github.com/cliclitv/clicli-live/media/utils/cmap"
+	"github.com/cliclitv/clicli-live/av"
+	"github.com/cliclitv/clicli-live/protocol/rtmp/cache"
+	"github.com/cliclitv/clicli-live/utils/cmap"
 )
 
 var (

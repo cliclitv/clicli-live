@@ -1,6 +1,6 @@
 package cache
 
-import "github.com/cliclitv/clicli-live/media/av"
+import "github.com/cliclitv/clicli-live/av"
 import "flag"
 
 var (

@@ -4,8 +4,8 @@ import (
 	"encoding/binary"
 	"fmt"
 
-	"github.com/cliclitv/clicli-live/media/av"
-	"github.com/cliclitv/clicli-live/media/utils/pool"
+	"github.com/cliclitv/clicli-live/av"
+	"github.com/cliclitv/clicli-live/utils/pool"
 )
 
 type ChunkStream struct {

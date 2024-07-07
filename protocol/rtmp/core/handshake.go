@@ -10,7 +10,7 @@ import (
 
 	"time"
 
-	"github.com/cliclitv/clicli-live/media/utils/pio"
+	"github.com/cliclitv/clicli-live/utils/pio"
 )
 
 var (

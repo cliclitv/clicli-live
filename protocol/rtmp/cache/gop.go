@@ -3,7 +3,7 @@ package cache
 import (
 	"errors"
 
-	"github.com/cliclitv/clicli-live/media/av"
+	"github.com/cliclitv/clicli-live/av"
 )
 
 var (

@@ -19,12 +19,12 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/cliclitv/clicli-live/media/av"
-	"github.com/cliclitv/clicli-live/media/container/flv"
-	"github.com/cliclitv/clicli-live/media/protocol/hls"
-	"github.com/cliclitv/clicli-live/media/protocol/httpflv"
-	"github.com/cliclitv/clicli-live/media/protocol/httpopera"
-	"github.com/cliclitv/clicli-live/media/protocol/rtmp"
+	"github.com/cliclitv/clicli-live/av"
+	"github.com/cliclitv/clicli-live/container/flv"
+	"github.com/cliclitv/clicli-live/protocol/hls"
+	"github.com/cliclitv/clicli-live/protocol/httpflv"
+	"github.com/cliclitv/clicli-live/protocol/httpopera"
+	"github.com/cliclitv/clicli-live/protocol/rtmp"
 )
 
 const (

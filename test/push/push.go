@@ -12,9 +12,9 @@ import (
 	"time"
 
 	"fmt"
-	"github.com/cliclitv/clicli-live/media/av"
-	"github.com/cliclitv/clicli-live/media/protocol/rtmp"
-	"github.com/cliclitv/clicli-live/media/utils/uid"
+	"github.com/cliclitv/clicli-live/av"
+	"github.com/cliclitv/clicli-live/protocol/rtmp"
+	"github.com/cliclitv/clicli-live/utils/uid"
 )
 
 var (

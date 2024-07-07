@@ -5,8 +5,8 @@ import (
 	"net"
 	"time"
 
-	"github.com/cliclitv/clicli-live/media/utils/pio"
-	"github.com/cliclitv/clicli-live/media/utils/pool"
+	"github.com/cliclitv/clicli-live/utils/pio"
+	"github.com/cliclitv/clicli-live/utils/pool"
 )
 
 const (

@@ -9,11 +9,11 @@ import (
 	"fmt"
 	"errors"
 
-	"github.com/cliclitv/clicli-live/media/av"
-	"github.com/cliclitv/clicli-live/media/protocol/amf"
-	"github.com/cliclitv/clicli-live/media/protocol/rtmp"
-	"github.com/cliclitv/clicli-live/media/utils/pio"
-	"github.com/cliclitv/clicli-live/media/utils/uid"
+	"github.com/cliclitv/clicli-live/av"
+	"github.com/cliclitv/clicli-live/protocol/amf"
+	"github.com/cliclitv/clicli-live/protocol/rtmp"
+	"github.com/cliclitv/clicli-live/utils/pio"
+	"github.com/cliclitv/clicli-live/utils/uid"
 )
 
 type Server struct {
