@@ -11,7 +11,6 @@ import (
 	"strings"
 	"time"
 
-	"github.com/cliclitv/clicli-live/glog"
 	"github.com/cliclitv/clicli-live/media/av"
 	"github.com/cliclitv/clicli-live/media/container/flv"
 	"github.com/cliclitv/clicli-live/media/container/ts"
@@ -67,7 +66,7 @@ func (self *Server) GetWriter(info av.Info) av.WriteCloser {
 		info.UID = uid.NEWID()
 		info.Inter = false
 		info.Type = "hls"
-		glog.Infoln("new hls source: ", info)
+		fmt.Println("new hls source: ", info)
 		s = NewSource(info)
 		self.conns.Set(info.Key, s)
 	} else {
@@ -90,7 +89,7 @@ func (self *Server) checkStop() {
 		for item := range self.conns.IterBuffered() {
 			v := item.Val.(*Source)
 			if !v.Alive() {
-				glog.Infoln("check stop and remove: ", v.Info())
+				fmt.Println("check stop and remove: ", v.Info())
 				self.conns.Remove(item.Key)
 			}
 		}
@@ -107,20 +106,20 @@ func (self *Server) handle(w http.ResponseWriter, r *http.Request) {
 	case ".m3u8":
 		key, err := self.parseM3u8(r.URL.Path)
 		if err != nil {
-			glog.Errorln("parse url error: ", key)
+			fmt.Println("parse url error: ", key)
 			http.Error(w, ErrNoPublisher.Error(), http.StatusForbidden)
 			return
 		}
 		conn := self.getConn(key)
 		if conn == nil {
-			glog.Errorln("can't get conn: ", key)
+			fmt.Println("can't get conn: ", key)
 			http.Error(w, ErrNoPublisher.Error(), http.StatusForbidden)
 			return
 		}
 		tsCache := conn.GetCacheInc()
 		body, err := tsCache.GenM3U8PlayList()
 		if err != nil {
-			glog.Errorln("GenM3U8PlayList error: ", err)
+			fmt.Println("GenM3U8PlayList error: ", err)
 			http.Error(w, err.Error(), http.StatusBadRequest)
 			return
 		}
@@ -140,7 +139,7 @@ func (self *Server) handle(w http.ResponseWriter, r *http.Request) {
 		tsCache := conn.GetCacheInc()
 		item, err := tsCache.GetItem(r.URL.Path)
 		if err != nil {
-			glog.Errorln("GetItem error: ", err)
+			fmt.Println("GetItem error: ", err)
 			http.Error(w, err.Error(), http.StatusBadRequest)
 			return
 		}
@@ -217,7 +216,7 @@ func NewSource(info av.Info) *Source {
 	go func() {
 		err := s.SendPacket()
 		if err != nil {
-			glog.Errorln("send packet error: ", err)
+			fmt.Println("send packet error: ", err)
 			s.closed = true
 		}
 	}()
@@ -229,7 +228,7 @@ func (self *Source) GetCacheInc() *TSCacheItem {
 }
 
 func (self *Source) DropPacket(pktQue chan av.Packet, info av.Info) {
-	glog.Errorf("[%v] packet queue max!!!", info)
+	fmt.Errorf("[%v] packet queue max!!!", info)
 	for i := 0; i < maxQueueNum-84; i++ {
 		tmpPkt, ok := <-pktQue
 		// try to don't drop audio
@@ -253,7 +252,7 @@ func (self *Source) DropPacket(pktQue chan av.Packet, info av.Info) {
 		}
 
 	}
-	glog.Infoln("packet queue len: ", len(pktQue))
+	fmt.Println("packet queue len: ", len(pktQue))
 }
 
 func (self *Source) Write(p av.Packet) error {
@@ -272,12 +271,12 @@ func (self *Source) Write(p av.Packet) error {
 
 func (self *Source) SendPacket() error {
 	defer func() {
-		glog.Infof("[%v] hls sender stop", self.info)
+		fmt.Printf("[%v] hls sender stop", self.info)
 		if r := recover(); r != nil {
-			glog.Errorln("hls SendPacket panic: ", r)
+			fmt.Println("hls SendPacket panic: ", r)
 		}
 	}()
-	glog.Infof("[%v] hls sender start", self.info)
+	fmt.Printf("[%v] hls sender start", self.info)
 	for {
 		if self.closed {
 			return errors.New("closed")
@@ -291,17 +290,17 @@ func (self *Source) SendPacket() error {
 
 			err := self.demuxer.Demux(&p)
 			if err == flv.ErrAvcEndSEQ {
-				glog.Errorln(err)
+				fmt.Println(err)
 				continue
 			} else {
 				if err != nil {
-					glog.Errorln(err)
+					fmt.Println(err)
 					return err
 				}
 			}
 			compositionTime, isSeq, err := self.parse(&p)
 			if err != nil {
-				glog.Errorln(err)
+				fmt.Println(err)
 			}
 			if err != nil || isSeq {
 				continue
@@ -331,7 +330,7 @@ func (self *Source) cleanup() {
 }
 
 func (self *Source) Close(err error) {
-	glog.Infoln("hls source closed: ", self.Info())
+	fmt.Println("hls source closed: ", self.Info())
 	if !self.closed {
 		self.cleanup()
 	}

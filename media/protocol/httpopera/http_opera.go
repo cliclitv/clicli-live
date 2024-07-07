@@ -2,13 +2,13 @@ package httpopera
 
 import (
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"net"
 	"net/http"
 	"net/url"
 	"strings"
 
-	"github.com/cliclitv/clicli-live/glog"
 	"github.com/cliclitv/clicli-live/media/av"
 	"github.com/cliclitv/clicli-live/media/protocol/rtmp"
 	"github.com/cliclitv/clicli-live/media/utils/uid"
@@ -92,7 +92,7 @@ func (s *Server) handleOpera(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		r.Body.Close()
-		glog.Infof("post body: %s\n", result)
+		fmt.Printf("post body: %s\n", result)
 
 		var op Operation
 		err = json.Unmarshal(result, &op)
@@ -160,7 +160,7 @@ func (s *Server) Pull(uri string, stop bool) error {
 // 			return
 // 		}
 // 		r.Body.Close()
-// 		glog.Infof("post body: %s\n", result)
+// 		fmt.Infof("post body: %s\n", result)
 
 // 		var op OperationChange
 // 		err = json.Unmarshal(result, &op)
@@ -223,7 +223,7 @@ func parseURL(URL string) (ret av.Info) {
 	ret.URL = URL
 	_url, err := url.Parse(URL)
 	if err != nil {
-		glog.Errorln(err)
+		fmt.Println(err)
 	}
 	ret.Key = strings.TrimLeft(_url.Path, "/")
 	ret.Inter = true

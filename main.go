@@ -19,7 +19,6 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/cliclitv/clicli-live/glog"
 	"github.com/cliclitv/clicli-live/media/av"
 	"github.com/cliclitv/clicli-live/media/container/flv"
 	"github.com/cliclitv/clicli-live/media/protocol/hls"
@@ -64,14 +63,14 @@ func catchSignal() {
 	sig := make(chan os.Signal)
 	signal.Notify(sig, syscall.SIGTERM)
 	<-sig
-	glog.Println("recieved signal!")
+	fmt.Println("recieved signal!")
 	// select {}
 }
 
 func main() {
 	defer func() {
 		if r := recover(); r != nil {
-			glog.Errorln("main panic: ", r)
+			fmt.Println("main panic: ", r)
 			time.Sleep(1 * time.Second)
 		}
 	}()
@@ -98,14 +97,14 @@ func main() {
 func startHls() *hls.Server {
 	hlsListen, err := net.Listen("tcp", *hlsAddr)
 	if err != nil {
-		glog.Fatal(err)
+		fmt.Println(err)
 	}
 
 	hlsServer := hls.NewServer()
 	go func() {
 		defer func() {
 			if r := recover(); r != nil {
-				glog.Errorln("hls server panic: ", r)
+				fmt.Println("hls server panic: ", r)
 			}
 		}()
 		hlsServer.Serve(hlsListen)
@@ -117,14 +116,14 @@ func startHls() *hls.Server {
 func startRtmp(stream *rtmp.RtmpStream, getters []av.GetWriter) {
 	rtmplisten, err := net.Listen("tcp", *rtmpAddr)
 	if err != nil {
-		glog.Fatal(err)
+		fmt.Println(err)
 	}
 
 	rtmpServer := rtmp.NewRtmpServer(stream, getters)
 	go func() {
 		defer func() {
 			if r := recover(); r != nil {
-				glog.Errorln("hls server panic: ", r)
+				fmt.Println("hls server panic: ", r)
 			}
 		}()
 		rtmpServer.Serve(rtmplisten)
@@ -134,14 +133,14 @@ func startRtmp(stream *rtmp.RtmpStream, getters []av.GetWriter) {
 func startHTTPFlv(stream *rtmp.RtmpStream) {
 	flvListen, err := net.Listen("tcp", *flvAddr)
 	if err != nil {
-		glog.Fatal(err)
+		fmt.Println(err)
 	}
 
 	hdlServer := httpflv.NewServer(stream)
 	go func() {
 		defer func() {
 			if r := recover(); r != nil {
-				glog.Errorln("hls server panic: ", r)
+				fmt.Println("hls server panic: ", r)
 			}
 		}()
 		hdlServer.Serve(flvListen)
@@ -152,13 +151,13 @@ func startHTTPOpera(stream *rtmp.RtmpStream) {
 	if *operaAddr != "" {
 		opListen, err := net.Listen("tcp", *operaAddr)
 		if err != nil {
-			glog.Fatal(err)
+			fmt.Println(err)
 		}
 		opServer := httpopera.NewServer(stream)
 		go func() {
 			defer func() {
 				if r := recover(); r != nil {
-					glog.Errorln("hls server panic: ", r)
+					fmt.Println("hls server panic: ", r)
 				}
 			}()
 			opServer.Serve(opListen)
@@ -177,7 +176,7 @@ func startPprof() {
 	if *prof != "" {
 		go func() {
 			if err := http.ListenAndServe(*prof, nil); err != nil {
-				glog.Fatal("enable pprof failed: ", err)
+				fmt.Println("enable pprof failed: ", err)
 			}
 		}()
 	}
@@ -185,18 +184,18 @@ func startPprof() {
 
 func mylog() {
 	fmt.Println("")
-	glog.Printf("SMS Version:  %s\tBuildTime:  %s\n", VERSION, BuildTime())
-	glog.Printf("SMS Start, Rtmp Listen On %s\n", *rtmpAddr)
-	glog.Printf("SMS Start, Hls Listen On %s\n", *hlsAddr)
-	glog.Printf("SMS Start, HTTP-flv Listen On %s\n", *flvAddr)
+	fmt.Printf("SMS Version:  %s\tBuildTime:  %s\n", VERSION, BuildTime())
+	fmt.Printf("SMS Start, Rtmp Listen On %s\n", *rtmpAddr)
+	fmt.Printf("SMS Start, Hls Listen On %s\n", *hlsAddr)
+	fmt.Printf("SMS Start, HTTP-flv Listen On %s\n", *flvAddr)
 	if *operaAddr != "" {
-		glog.Printf("SMS Start, HTTP-Operation Listen On %s\n", *operaAddr)
+		fmt.Printf("SMS Start, HTTP-Operation Listen On %s\n", *operaAddr)
 	}
 	if *prof != "" {
-		glog.Printf("SMS Start, Pprof Server Listen On %s\n", *prof)
+		fmt.Printf("SMS Start, Pprof Server Listen On %s\n", *prof)
 	}
 	if *flvDvr {
-		glog.Printf("SMS Start, Flv Dvr Save On [%s]", "app/streamName.flv")
+		fmt.Printf("SMS Start, Flv Dvr Save On [%s]", "app/streamName.flv")
 	}
 	SavePid()
 }
@@ -212,7 +211,7 @@ func getParentDirectory(dirctory string) string {
 func getCurrentDirectory() string {
 	dir, err := filepath.Abs(filepath.Dir(os.Args[0]))
 	if err != nil {
-		glog.Fatal(err)
+		fmt.Println(err)
 	}
 	return strings.Replace(dir, "\\", "/", -1)
 }

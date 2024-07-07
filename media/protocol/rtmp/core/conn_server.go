@@ -8,7 +8,7 @@ import (
 	"github.com/cliclitv/clicli-live/media/av"
 	"github.com/cliclitv/clicli-live/media/protocol/amf"
 
-	"github.com/cliclitv/clicli-live/glog"
+	"fmt"
 )
 
 var (
@@ -251,7 +251,7 @@ func (self *ConnServer) handleCmdMsg(c *ChunkStream) error {
 	if err != nil && err != io.EOF {
 		return err
 	}
-	// glog.Infof("rtmp req: %#v", vs)
+	// fmt.Infof("rtmp req: %#v", vs)
 	switch vs[0].(type) {
 	case string:
 		switch vs[0].(string) {
@@ -278,7 +278,7 @@ func (self *ConnServer) handleCmdMsg(c *ChunkStream) error {
 			}
 			self.done = true
 			self.isPublisher = true
-			glog.Infoln("handle publish req done")
+			fmt.Println("handle publish req done")
 		case cmdPlay:
 			if err = self.publishOrPlay(vs[1:]); err != nil {
 				return err
@@ -288,7 +288,7 @@ func (self *ConnServer) handleCmdMsg(c *ChunkStream) error {
 			}
 			self.done = true
 			self.isPublisher = false
-			glog.Infoln("handle play req done")
+			fmt.Println("handle play req done")
 		case cmdFcpublish:
 			self.fcPublish(vs)
 		case cmdReleaseStream:
@@ -296,7 +296,7 @@ func (self *ConnServer) handleCmdMsg(c *ChunkStream) error {
 		case cmdFCUnpublish:
 		case cmdDeleteStream:
 		default:
-			glog.Infoln("no support command=", vs[0].(string))
+			fmt.Println("no support command=", vs[0].(string))
 		}
 	}
 

@@ -48,10 +48,6 @@ func NewConn(c net.Conn, bufferSize int) *Conn {
 func (self *Conn) Read(c *ChunkStream) error {
 	for {
 		h, _ := self.rw.ReadUintBE(1)
-		// if err != nil {
-		// 	glog.Errorln("read from conn error: ", err)
-		// 	return err
-		// }
 		format := h >> 6
 		csid := h & 0x3f
 		cs, ok := self.chunks[csid]

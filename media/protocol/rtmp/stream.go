@@ -3,8 +3,8 @@ package rtmp
 import (
 	"errors"
 	"time"
+	"fmt"
 
-	"github.com/cliclitv/clicli-live/glog"
 	"github.com/cliclitv/clicli-live/media/av"
 	"github.com/cliclitv/clicli-live/media/protocol/rtmp/cache"
 	"github.com/cliclitv/clicli-live/media/utils/cmap"
@@ -78,7 +78,7 @@ func (rs *RtmpStream) CheckAlive() {
 			if v.CheckAlive() == 0 {
 				rs.streams.Remove(item.Key)
 				if v.r != nil {
-					glog.Infof("check alive and remove: %v", v.r.Info())
+					fmt.Println("check alive and remove: %v", v.r.Info())
 				}
 			}
 		}
@@ -146,11 +146,11 @@ func (s *Stream) AddWriter(w av.WriteCloser) {
 func (s *Stream) TransStart() {
 	defer func() {
 		if s.r != nil {
-			glog.Infof("[%v] Transport stop", s.r.Info())
+			fmt.Println("[%v] Transport stop", s.r.Info())
 		}
 		// debug mode don't use it
 		// 	if r := recover(); r != nil {
-		// 		glog.Errorln("rtmp TransStart panic: ", r)
+		// 		fmt.Errorln("rtmp TransStart panic: ", r)
 		// 	}
 	}()
 
@@ -174,14 +174,14 @@ func (s *Stream) TransStart() {
 			v := item.Val.(*PackWriterCloser)
 			if !v.init {
 				if err = s.cache.Send(v.w); err != nil {
-					glog.Errorf("[%s] send cache packet error: %v, remove", v.w.Info(), err)
+					fmt.Errorf("[%s] send cache packet error: %v, remove", v.w.Info(), err)
 					s.ws.Remove(item.Key)
 					continue
 				}
 				v.init = true
 			} else {
 				if err = v.w.Write(p); err != nil {
-					glog.Errorf("[%s] write packet error: %v, remove", v.w.Info(), err)
+					fmt.Errorf("[%s] write packet error: %v, remove", v.w.Info(), err)
 					s.ws.Remove(item.Key)
 				}
 			}
@@ -208,7 +208,7 @@ func (s *Stream) CheckAlive() (n int) {
 		v := item.Val.(*PackWriterCloser)
 		if v.w != nil {
 			if !v.w.Alive() {
-				glog.Infof("[%v] player closed and remove\n", v.w.Info())
+				fmt.Println("[%v] player closed and remove\n", v.w.Info())
 				s.ws.Remove(item.Key)
 				v.w.Close(errors.New("write timeout"))
 				continue
@@ -225,7 +225,7 @@ func (s *Stream) closeInter() {
 		if v.w != nil {
 			if v.w.Info().IsInterval() {
 				v.w.Close(errors.New("closed"))
-				glog.Infof("[%v] player closed and remove\n", v.w.Info())
+				fmt.Println("[%v] player closed and remove\n", v.w.Info())
 				s.ws.Remove(item.Key)
 			}
 		}

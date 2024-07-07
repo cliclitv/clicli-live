@@ -9,8 +9,7 @@ import (
 	"net"
 	neturl "net/url"
 	"strings"
-
-	"github.com/cliclitv/clicli-live/glog"
+	
 	"github.com/cliclitv/clicli-live/media/av"
 	"github.com/cliclitv/clicli-live/media/protocol/amf"
 )
@@ -206,9 +205,9 @@ func (self *ConnClient) Start(url string, method string) error {
 		port = ":" + port
 	}
 	ips, err := net.LookupIP(host)
-	glog.Infof("ips: %v, host: %v", ips, host)
+	fmt.Printf("ips: %v, host: %v", ips, host)
 	if err != nil {
-		glog.Errorln(err)
+		fmt.Println(err)
 		return err
 	}
 	remoteIP = ips[rand.Intn(len(ips))].String()
@@ -218,22 +217,22 @@ func (self *ConnClient) Start(url string, method string) error {
 
 	local, err := net.ResolveTCPAddr("tcp", localIP)
 	if err != nil {
-		glog.Errorln(err)
+		fmt.Println(err)
 		return err
 	}
-	glog.Infoln("remoteIP: ", remoteIP)
+	fmt.Println("remoteIP: ", remoteIP)
 	remote, err := net.ResolveTCPAddr("tcp", remoteIP)
 	if err != nil {
-		glog.Errorln(err)
+		fmt.Println(err)
 		return err
 	}
 	conn, err := net.DialTCP("tcp", local, remote)
 	if err != nil {
-		glog.Errorln(err)
+		fmt.Println(err)
 		return err
 	}
 
-	glog.Infoln("connection:", "local:", conn.LocalAddr(), "remote:", conn.RemoteAddr())
+	fmt.Println("connection:", "local:", conn.LocalAddr(), "remote:", conn.RemoteAddr())
 
 	self.conn = NewConn(conn, 4*1024)
 	if err := self.conn.HandshakeClient(); err != nil {

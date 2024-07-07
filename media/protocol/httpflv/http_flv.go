@@ -6,10 +6,9 @@ import (
 	"net/http"
 	"strings"
 	"time"
-
+	"fmt"
 	"errors"
 
-	"github.com/cliclitv/clicli-live/glog"
 	"github.com/cliclitv/clicli-live/media/av"
 	"github.com/cliclitv/clicli-live/media/protocol/amf"
 	"github.com/cliclitv/clicli-live/media/protocol/rtmp"
@@ -84,7 +83,7 @@ func (s *Server) getStream(w http.ResponseWriter, r *http.Request) {
 func (self *Server) handleConn(w http.ResponseWriter, r *http.Request) {
 	defer func() {
 		if r := recover(); r != nil {
-			glog.Errorln("http flv handleConn panic: ", r)
+			fmt.Println("http flv handleConn panic: ", r)
 		}
 	}()
 
@@ -96,7 +95,7 @@ func (self *Server) handleConn(w http.ResponseWriter, r *http.Request) {
 	}
 	path := strings.TrimSuffix(strings.TrimLeft(u, "/"), ".flv")
 	paths := strings.SplitN(path, "/", 2)
-	glog.Infoln("url:", u, "path:", path, "paths:", paths)
+	fmt.Println("url:", u, "path:", path, "paths:", paths)
 
 	if len(paths) != 2 {
 		http.Error(w, "invalid path", http.StatusBadRequest)
@@ -145,7 +144,7 @@ func NewFLVWriter(app, title, url string, ctx http.ResponseWriter) *FLVWriter {
 	go func() {
 		err := ret.SendPacket()
 		if err != nil {
-			glog.Errorln("SendPacket error:", err)
+			fmt.Println("SendPacket error:", err)
 			ret.closed = true
 		}
 	}()
@@ -153,13 +152,13 @@ func NewFLVWriter(app, title, url string, ctx http.ResponseWriter) *FLVWriter {
 }
 
 func (self *FLVWriter) DropPacket(pktQue chan av.Packet, info av.Info) {
-	glog.Errorf("[%v] packet queue max!!!", info)
+	fmt.Errorf("[%v] packet queue max!!!", info)
 	for i := 0; i < maxQueueNum-84; i++ {
 		tmpPkt, ok := <-pktQue
 		if ok {
 			// try to don't drop audio
 			if tmpPkt.IsAudio {
-				glog.Infoln("insert audio to queue")
+				fmt.Println("insert audio to queue")
 				if len(pktQue) > maxQueueNum-2 {
 					<-pktQue
 				} else {
@@ -174,7 +173,7 @@ func (self *FLVWriter) DropPacket(pktQue chan av.Packet, info av.Info) {
 				}
 				// dont't drop sps config and dont't drop key frame
 				if videoPkt.IsSeq() || videoPkt.IsKeyFrame() {
-					glog.Infoln("insert keyframe to queue")
+					fmt.Println("insert keyframe to queue")
 					pktQue <- tmpPkt
 				}
 			}
@@ -182,7 +181,7 @@ func (self *FLVWriter) DropPacket(pktQue chan av.Packet, info av.Info) {
 		}
 
 	}
-	glog.Infoln("packet queue len: ", len(pktQue))
+	fmt.Println("packet queue len: ", len(pktQue))
 }
 
 func (self *FLVWriter) Write(p av.Packet) error {
@@ -262,7 +261,7 @@ func (self *FLVWriter) Wait() {
 }
 
 func (self *FLVWriter) Close(error) {
-	glog.Infoln("http flv closed")
+	fmt.Println("http flv closed")
 	if !self.closed {
 		close(self.packetQueue)
 		close(self.closedChan)

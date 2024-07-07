@@ -8,7 +8,6 @@ import (
 
 	"fmt"
 
-	"github.com/cliclitv/clicli-live/glog"
 	"github.com/cliclitv/clicli-live/media/av"
 	"github.com/cliclitv/clicli-live/media/protocol/amf"
 	"github.com/cliclitv/clicli-live/media/utils/pio"
@@ -24,26 +23,26 @@ type FlvDvr struct{}
 func (f *FlvDvr) GetWriter(info av.Info) av.WriteCloser {
 	paths := strings.SplitN(info.Key, "/", 2)
 	if len(paths) != 2 {
-		glog.Errorln("invalid info")
+		fmt.Println("invalid info")
 		return nil
 	}
 
 	err := os.MkdirAll(paths[0], 0755)
 	if err != nil {
-		glog.Errorln("mkdir error:", err)
+		fmt.Println("mkdir error:", err)
 		return nil
 	}
 
 	fileName := fmt.Sprintf("%s_%d.%s", info.Key, time.Now().Unix(), "flv")
-	glog.Infoln("flv dvr save stream to: ", fileName)
+	fmt.Println("flv dvr save stream to: ", fileName)
 	w, err := os.OpenFile(fileName, os.O_CREATE|os.O_RDWR, 0755)
 	if err != nil {
-		glog.Errorln("open file error: ", err)
+		fmt.Println("open file error: ", err)
 		return nil
 	}
 
 	writer := NewFLVWriter(paths[0], paths[1], info.URL, w)
-	glog.Infoln("new flv dvr: ", writer.Info())
+	fmt.Println("new flv dvr: ", writer.Info())
 	return writer
 }
 
@@ -125,7 +124,7 @@ func (self *FLVWriter) Write(p av.Packet) error {
 }
 
 func (self *FLVWriter) Close(error) {
-	glog.Infoln("flv dvr closed")
+	fmt.Println("flv dvr closed")
 	self.ctx.Close()
 }
 

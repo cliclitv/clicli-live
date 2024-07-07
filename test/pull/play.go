@@ -12,7 +12,7 @@ import (
 
 	"time"
 
-	"github.com/cliclitv/clicli-live/glog"
+	"fmt"
 	"github.com/cliclitv/clicli-live/media/av"
 	"github.com/cliclitv/clicli-live/media/container/flv"
 	"github.com/cliclitv/clicli-live/media/protocol/rtmp"
@@ -40,10 +40,10 @@ func main() {
 }
 
 func play(rtmpClient *rtmp.Client, num int) {
-	glog.Infof("dial to [%s]", *host)
+	fmt.Println("dial to [%s]", *host)
 	err := rtmpClient.Dial(*host, "play")
 	if err != nil {
-		glog.Errorf("dial [%s] error: %v", *host, err)
+		fmt.Errorf("dial [%s] error: %v", *host, err)
 		return
 	}
 	if *saveFlv {
@@ -51,19 +51,19 @@ func play(rtmpClient *rtmp.Client, num int) {
 		paths := strings.Split(info.Key, "/")
 		err := os.MkdirAll(paths[0], 0755)
 		if err != nil {
-			glog.Errorln(err)
+			fmt.Println(err)
 			return
 		}
 		numStr := strconv.Itoa(num)
 		filename := info.Key + "_" + numStr + ".flv"
 		file, err := os.OpenFile(filename, os.O_CREATE|os.O_RDWR, 0644)
 		if err != nil {
-			glog.Errorln(err)
+			fmt.Println(err)
 			return
 		}
 		flvWriter := flv.NewFLVWriter(paths[0], paths[1], *host, file)
 		rtmpClient.GetHandle().HandleWriter(flvWriter)
-		glog.Infof("save [%s] to [%s]\n\n", *host, filename)
+		fmt.Println("save [%s] to [%s]\n\n", *host, filename)
 	}
 }
 
@@ -72,7 +72,7 @@ func parseURL(URL string) (ret av.Info) {
 	ret.URL = URL
 	_url, err := url.Parse(URL)
 	if err != nil {
-		glog.Errorln(err)
+		fmt.Println(err)
 	}
 	ret.Key = strings.TrimLeft(_url.Path, "/")
 	ret.Inter = true
@@ -83,5 +83,5 @@ func catchSignal() {
 	sig := make(chan os.Signal)
 	signal.Notify(sig, syscall.SIGINT)
 	<-sig
-	glog.Println("recieved signal!")
+	fmt.Println("recieved signal!")
 }
