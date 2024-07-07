@@ -1,7 +1,7 @@
 # clicli-live
 > clicli 直播服务器
 
-- 推流
+- 推流(app端建议使用rtc)
 ```
 ffmpeg -re -i 001.mp4 -c copy -f flv rtmp://www.clicli.us/live/uu520
 ```
